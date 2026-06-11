@@ -105,6 +105,12 @@ function parseCSV(text) {
     const id = get(C.id) || "";
     if (!id || id === "Номер КТК") return null;
 
+    // Отладка: выводим значения ключевых колонок для первой строки
+    if (row === rows[0]) {
+      console.log("=== ОТЛАДКА КОЛОНОК (первая строка) ===");
+      row.forEach((val, idx) => console.log(`[${idx}] = "${val}"`));
+    }
+
     const owner = (get(C.owner) || "").trim();
     const dest  = get(C.dest) || "";
     const route = ROUTE_MAP[dest] || `Китай — ${dest}`;
@@ -114,28 +120,30 @@ function parseCSV(text) {
 
     const statuses = [
       { title: "Создан",                                  date: dStr(C.dvizh_nach),  done: dDone(C.dvizh_nach) },
-      { title: "Движение КТК на судне",                   date: null,                done: dDone(C.dvizh_nach), isHeader: true },
+      { title: "Движение КТК на судне",                   date: null,                done: dDone(C.dvizh_nach) && dDone(C.vygruzka), isHeader: true },
       { title: "Погрузка на судно",                       date: dStr(C.dvizh_nach),  done: dDone(C.dvizh_nach) },
       { title: "Выгрузка с судна",                        date: dStr(C.vygruzka),    done: dDone(C.vygruzka) },
-      { title: "Таможенное оформление",                   date: null,                done: dDone(C.teleks),    isHeader: true },
+      { title: "Таможенное оформление",                   date: null,                done: dDone(C.teleks) && dDone(C.deklarac) && dDone(C.poruchenie) && dDone(C.gotovnost), isHeader: true },
       { title: "Появление телекса",                       date: dStr(C.teleks),      done: dDone(C.teleks) },
       { title: "Получение декларации на товары",          date: dStr(C.deklarac),    done: dDone(C.deklarac) },
       { title: "Получение поручения на отправку по ж/д", date: dStr(C.poruchenie),  done: dDone(C.poruchenie) },
       { title: "Дата готовности КТК к вывозу с порта",   date: dStr(C.gotovnost),   done: dDone(C.gotovnost) },
-      { title: "Отправка по ж/д",                        date: null,                done: dDone(C.otpr_jd),   isHeader: true },
+      { title: "Отправка по ж/д",                        date: null,                done: dDone(C.otpr_jd) && (!hasPeregr || dDone(C.dvizh_jd)) && (!hasPostPeregr || dDone(C.peregr_nach)), isHeader: true },
       { title: "Движение по ж/д",                        date: dStr(C.otpr_jd),     done: dDone(C.otpr_jd) },
       ...(hasPeregr     ? [{ title: "Станция перегруза",               date: dStr(C.dvizh_jd),    done: dDone(C.dvizh_jd) }]    : []),
       ...(hasPostPeregr ? [{ title: "Движение по ж/д после перегруза", date: dStr(C.peregr_nach), done: dDone(C.peregr_nach) }] : []),
       { title: "Груз доставлен",                         date: dStr(C.priem_por),   done: dDone(C.priem_por) },
     ];
 
-    const summary = [
-      { title: "Создан",                date: dStr(C.dvizh_nach), done: dDone(C.dvizh_nach) },
-      { title: "Движение КТК на судне", date: dStr(C.dvizh_nach), done: dDone(C.dvizh_nach) },
-      { title: "Таможенное оформление", date: dStr(C.teleks),     done: dDone(C.teleks) },
-      { title: "Отправка по ж/д",       date: dStr(C.otpr_jd),    done: dDone(C.otpr_jd) },
-      { title: "Груз доставлен",        date: dStr(C.priem_por),  done: dDone(C.priem_por) },
+    const summarySteps = [
+      { title: "Создан",                date: dStr(C.dvizh_nach), colIdx: C.dvizh_nach },
+      { title: "Движение КТК на судне", date: dStr(C.dvizh_nach), colIdx: C.dvizh_nach },
+      { title: "Таможенное оформление", date: dStr(C.teleks),     colIdx: C.teleks     },
+      { title: "Отправка по ж/д",       date: dStr(C.otpr_jd),    colIdx: C.otpr_jd    },
+      { title: "Груз доставлен",        date: dStr(C.priem_por),  colIdx: C.priem_por  },
     ];
+    const currentStep = Math.max(0, ...summarySteps.map((s, i) => dDone(s.colIdx) ? i : -1));
+    const summary = summarySteps.map((s, i) => ({ ...s, done: i <= currentStep }));
 
     const nonHeaders = statuses.filter(s => !s.isHeader);
     const allDone    = nonHeaders.every(s => s.done);
@@ -220,7 +228,7 @@ function renderDetail(item) {
       return `
         <div class="dtl-row">
           <div class="dtl-spine">
-            <div class="dtl-dot dtl-dot-done dtl-dot-header"></div>
+            <div class="dtl-dot ${s.done ? "dtl-dot-done" : "dtl-dot-off"} dtl-dot-header"></div>
             ${hasLineAfter ? `<div class="dtl-line ${lineOff ? "dtl-line-off" : "dtl-line-done"}"></div>` : ""}
           </div>
           <div class="dtl-content">

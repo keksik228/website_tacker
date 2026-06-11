@@ -247,7 +247,7 @@ a.header-logo:hover {
 }
 .dtl-dot-done { background: var(--green); }
 .dtl-dot-off  { background: transparent; border: 2px solid var(--dot-off); }
-.dtl-dot-header { background: var(--green); width: 16px; height: 16px; }
+.dtl-dot-header { width: 16px; height: 16px; }
 .dtl-line {
   width: 2px; flex: 1; margin: 3px 0 0;
 }
