@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Детали контейнера</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+  <header class="header">
+    <a class="header-user" href="settings.html">
+      <div class="avatar-container">
+        <img src="user.svg" alt="avatar" class="avatar-img">
+      </div>
+      <div class="account-info">
+        <span class="username" id="header-name">—</span>
+        <span class="phone"    id="header-phone">—</span>
+      </div>
+    </a>
+    <a class="header-logo" href="main.html">
+      <img src="logo.svg" alt="Логотип" class="logo-img">
+    </a>
+  </header>
+
+  <div class="detail-container" id="detail-root">
+    <div class="loading-msg">Загрузка...</div>
+  </div>
+
+  <script src="main_script.js"></script>
+  <script>
+    window.__detailMode = true;
+
+    // Подставляем имя пользователя из localStorage
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    if (user.username) document.getElementById('header-name').textContent  = user.username;
+    if (user.phone)    document.getElementById('header-phone').textContent = user.phone;
+  </script>
+</body>
+</html>

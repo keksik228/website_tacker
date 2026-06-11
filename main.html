@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - Отслеживание грузов</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+    <!-- Верхняя панель (Шапка) -->
+    <header class="header">
+        <a class="header-user" href="settings.html">
+            <div class="avatar-container">
+                <img src="user.svg" alt="Avatar" class="avatar-img">
+            </div>
+            <div class="account-info">
+                <span class="username" id="header-username">—</span>
+                <span class="phone"    id="header-phone">—</span>
+            </div>
+        </a>
+        <a class="header-logo" href="main.html">
+            <img src="logo.svg" alt="Логотип компании" class="logo-img">
+        </a>
+    </header>
+
+    <!-- Строка поиска трек-номера -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <div class="search-icon-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+            <input type="text" placeholder="Введите трек-номер" class="search-input">
+        </div>
+    </div>
+
+    <main class="dashboard-grid" id="card-container">
+        <!-- Карточки будут созданы скриптом -->
+    </main>
+
+    <script>
+        // Подставляем имя пользователя из localStorage
+        const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (user.username) document.getElementById('header-username').textContent = user.username;
+        if (user.phone)    document.getElementById('header-phone').textContent    = user.phone;
+    </script>
+    <script src="main_script.js"></script>
+</body>
+</html>
