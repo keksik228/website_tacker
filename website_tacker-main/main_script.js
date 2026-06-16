@@ -7,35 +7,6 @@ const ACCOUNTS = {
   'User_2': { name: 'User_2', phone: '+7 987 654 32 10' },
 };
 
-const ROUTE_MAP = {
-  "Белый Раст": "Китай — Белый Раст",
-  "Аппаратная": "Китай — Аппаратная",
-};
-
-// Индексы колонок Google Sheets
-const C = {
-    id:          0,
-    sobstv:      2,
-    prinadl:     3,
-    razmer:      4,
-    dvizh_nach:  8,   // Движение КТК на судне (начало) → Создан + Погрузка
-    dvizh_kon:   9,   // Движение КТК на судне (конец)
-    reys:        10,
-    sudno:       11,
-    vygruzka:    12,  // Выгрузка с судна
-    terminal:    13,
-    teleks:      14,  // Появление телекса
-    deklarac:    15,  // Получение декларации
-    poruchenie:  16,  // Получение поручения по ж/д
-    gotovnost:   17,  // Дата готовности КТК
-    otpr_jd:     18,  // Движение по ж/д (начало)
-    peregr_st:   22,  // Движение груженого КТК по ж/д после перегруза КТК (ПВ-ФИТ), факт. дата начала → Станция перегруза
-    peregr_nach: 23,  // После перегруза (начало)
-    dest:        24,  // Конечная станция
-    lot:         25,
-    priem_por:   28,  // Прием порожнего → Груз доставлен
-  };
-
 // ─── СОСТОЯНИЕ ───────────────────────────────────────────────────────────────
 
 let allData = [];
@@ -108,6 +79,7 @@ function parseCSV(text) {
     poruchenie:  16,  // Получение поручения по ж/д
     gotovnost:   17,  // Дата готовности КТК
     otpr_jd:     18,  // Движение по ж/д (начало)
+    peregr_stancia: 21,  // Станция перегруза ПВ-ФИТ
     peregr_st:   22,  // Движение груженого КТК по ж/д после перегруза КТК (ПВ-ФИТ), факт. дата начала → Станция перегруза
     peregr_nach: 23,  // После перегруза (начало)
     dest:        24,  // Конечная станция
@@ -183,6 +155,7 @@ function parseCSV(text) {
 
     const hasPeregr     = !!dStr(C.peregr_st);
     const hasPostPeregr = !!dStr(C.peregr_nach);
+    const peregrStation = get(C.peregr_stancia) || "";
 
     const statuses = [
       { title: "Создан",
@@ -208,7 +181,7 @@ function parseCSV(text) {
       { title: "Движение по ж/д",
         date: dStr(C.otpr_jd), done: dDone(C.otpr_jd) },
       ...(hasPeregr ? [
-        { title: "Станция перегруза",
+        { title: peregrStation ? `Станция перегруза: ${peregrStation}` : "Станция перегруза",
           date: dStr(C.peregr_st), done: dDone(C.peregr_st) },
       ] : []),
       ...(hasPostPeregr ? [
