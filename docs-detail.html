@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Документы контейнера</title>
+  <link rel="stylesheet" href="main.css">
+  <style>
+    .docs-dl-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 0 48px;
+    }
+    .docs-dl-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 15px; font-weight: 500;
+      color: #111; margin-bottom: 20px; padding: 6px 0;
+      transition: opacity .15s;
+    }
+    .docs-dl-back:hover { opacity: .6; }
+    .docs-dl-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px 28px 8px;
+      box-shadow: var(--shadow);
+    }
+    .docs-dl-heading {
+      font-size: 22px; font-weight: 800; color: #111;
+      margin-bottom: 4px;
+    }
+    .docs-dl-sub {
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .docs-dl-row {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .docs-dl-row:last-child { border-bottom: none; }
+    .docs-dl-label {
+      font-size: 15px; font-weight: 500; color: #111; line-height: 1.35;
+    }
+    .docs-dl-btn {
+      flex-shrink: 0;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 8px;
+      transition: background .15s;
+      color: var(--muted);
+    }
+    .docs-dl-btn:hover { background: #f0f0f0; color: #111; }
+    .docs-dl-btn svg { pointer-events: none; }
+    .docs-dl-missing { color: #bbb; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a class="header-user" href="settings.html">
+      <div class="avatar-container">
+        <img src="user.svg" alt="Avatar" class="avatar-img">
+      </div>
+      <div class="account-info">
+        <span class="username" id="header-username">—</span>
+        <span class="phone"    id="header-phone">—</span>
+      </div>
+    </a>
+    <a class="header-logo" href="main.html">
+      <img src="logo.svg" alt="Логотип компании" class="logo-img">
+    </a>
+  </header>
+
+  <div class="docs-dl-wrapper" id="docs-dl-root">
+    <div class="loading-msg">Загрузка...</div>
+  </div>
+
+  <script src="main_script.js"></script>
+  <script>
+    window.__docsDetailMode = true;
+  </script>
+</body>
+</html>

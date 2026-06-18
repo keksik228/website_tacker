@@ -205,9 +205,36 @@ a.header-logo:hover {
 
 /* ── Detail page ── */
 .detail-container {
-  max-width: 860px;
+  max-width: 1180px;
   margin: 0 auto;
   padding: 0 16px;
+}
+
+/* Обёртка детального экрана: основная карточка + панель документов рядом */
+.detail-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.detail-main {
+  flex: 1 1 700px;
+  min-width: 0;
+}
+
+.detail-side {
+  flex: 0 0 320px;
+}
+
+/* На узких экранах панель документов опускается под основную карточку */
+@media (max-width: 860px) {
+  .detail-layout {
+    flex-direction: column;
+  }
+  .detail-side {
+    flex: 1 1 auto;
+    width: 100%;
+  }
 }
 
 .detail-back {
@@ -276,3 +303,37 @@ a.header-logo:hover {
 .info-row:last-child { border-bottom: none; }
 .info-label { color: var(--muted); font-weight: 400; }
 .info-value { color: #111; font-weight: 600; text-align: right; }
+
+/* ── Документы (детальный экран) ── */
+.docs-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px 24px 6px;
+  box-shadow: var(--shadow);
+}
+
+.docs-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.docs-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.docs-row:last-child { border-bottom: none; }
+
+.docs-row-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  line-height: 1.35;
+}
+
+.docs-check { flex-shrink: 0; margin-top: 2px; }
